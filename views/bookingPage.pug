@@ -1,0 +1,41 @@
+extends base
+
+block content
+  main.main
+    .card-container
+    
+      each booking in bookings
+        .card
+          .card__header
+            .card__picture
+              .card__picture-overlay &nbsp;
+              img.card__picture-img(src=`/img/tours/${booking.imageCover}`, alt=`${booking.tourname}`)
+            h3.heading-tertirary
+              span= booking.tourname
+
+          .card__details
+              .card_data  
+
+                svg.card__icon
+                    use(xlink:href='/img/icons.svg#icon-user')
+                span= ` ${booking.user.name}` 
+              .card_data  
+                svg.card__icon
+                    use(xlink:href='/img/icons.svg#icon-user')
+                span= ` ${booking.user.email}` 
+              .card_data
+                .card_data
+                    span.card__footer-value= `Price `   
+                .card_data 
+                  svg.card__icon
+                    use(xlink:href='/img/icons.svg#icon-credit-card')  
+                    |                      
+                  span= `            ₹${booking.price}`  
+              .card_data  
+                .card_data
+                    span.card__footer-value= `Purchased On `   
+                .card_data 
+                  svg.card__icon
+                    use(xlink:href='/img/icons.svg#icon-calendar')  
+                    |         
+                  span= `            ${booking.createdAt.toLocaleString('en-us', {month: 'long', year: 'numeric',day: 'numeric'})}`
