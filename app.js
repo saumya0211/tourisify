@@ -4,6 +4,7 @@ const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
@@ -73,6 +74,8 @@ app.use(
     },
   }),
 );
+
+app.use(compression());
 // Development Logging
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
