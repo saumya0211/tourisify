@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
+const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
@@ -14,6 +15,7 @@ const tourRouter = require('./routes/tourRoute');
 const userRouter = require('./routes/userRoute');
 const reviewRouter = require('./routes/reviewRoute');
 const bookingRouter = require('./routes/bookingRoute');
+const bookingController = require('./controllers/bookingController');
 const viewRouter = require('./routes/viewRoute');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -22,6 +24,10 @@ const app = express();
 
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
+
+// Cross origin request
+app.use(cors());
+app.options('*', cors());
 
 // Serving static files
 app.use(express.static(path.join(__dirname, 'public')));
@@ -88,6 +94,12 @@ const limiter = rateLimit({
   message: 'Too many request from this IP, please try again in an hour',
 });
 app.use('/api', limiter);
+
+app.post(
+  '/webhook',
+  express.raw({ type: 'application/json' }),
+  bookingController.webhookCheckout,
+);
 
 // Body parser, reads data from body into req.body
 app.use(express.json({ limit: '10kb' }));
